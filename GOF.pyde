@@ -85,13 +85,6 @@ run = False
 def setup():    
     size(*DIM)
     
-def mouseClicked():
-    global read_grid
-    spacing = DIM[0] // read_grid.dim
-    k, j = (mouseY // spacing, mouseX // spacing)
-    cell = read_grid.grid[j][k]
-    cell.state = not cell.state
-    
 def draw():
     global read_grid, write_grid, run
             
@@ -130,8 +123,14 @@ def draw():
     else:
         read_grid.show()
     
-    
 def keyPressed():
     global run
     if key == ENTER:
         run = not run
+        
+def mouseClicked():
+    global read_grid
+    spacing = DIM[0] // read_grid.dim
+    k, j = (mouseY // spacing, mouseX // spacing)
+    cell = read_grid.grid[j][k]
+    cell.state = not cell.state
