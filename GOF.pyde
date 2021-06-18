@@ -62,7 +62,6 @@ class Grid:
          del self.grid[:]
     
     def get_neighbors(self, column_index, row_index):
-
         neighbors = [
                       self.grid[(column_index + 1) % self.dim][row_index], self.grid[(column_index - 1) % self.dim][row_index],
                       self.grid[column_index][(row_index + 1) % self.dim], self.grid[column_index][(row_index - 1) % self.dim],
@@ -108,7 +107,6 @@ def draw():
         If a cell is alive, and has more than 3 neighbors, then it dies.
         If a cell is dead, and has 3 neighbors, then it becomes alive.
     """
- 
 
     if run:
         write_grid.create()
