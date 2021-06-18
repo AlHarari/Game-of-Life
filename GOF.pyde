@@ -18,10 +18,10 @@ class Cell:
             
     def show(self):
         if self.state:
-            stroke(255)
+            stroke(255, 100)
             fill(255)
         else:
-            stroke(0)
+            stroke(255, 100)
             fill(0)
         square(self.x, self.y, self.wdth)
 
