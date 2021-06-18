@@ -1,3 +1,8 @@
+"""
+Finished on 4:40 PM, 18th of June, 2021. 
+Made in collboration with my uncle, Assim Addous.
+"""
+
 DIM = (800, 800) # dimensions of the screen must be equal please ;(
 dim = 45 # size of grid
 
