@@ -4,10 +4,7 @@ Made in collboration with my uncle, Assim Addous.
 """
 
 DIM = (800, 800) # dimensions of the screen must be equal please ;(
-dim = 45 # size of grid
-
-
-# Program works well only for the first generation. Why? It just freezes.'
+dim = 5 # size of grid
 
 class Cell:
     def __init__(self, x, y, wdth):
@@ -90,7 +87,7 @@ def draw():
             
     # Algorithm:
     #    1) Create grid `read_grid`
-    #    2) Create a another grid `write_grid`. Should be blank!
+    #    2) Create another grid `write_grid`. Should be blank!
     #    3) Based on `read_grid`, fill in for `write_grid`
     #    4) Replace `read_grid` by `write_grid` 
 
