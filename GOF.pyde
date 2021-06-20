@@ -1,16 +1,11 @@
-"""
-Finished on 4:40 PM, 18th of June, 2021. 
-Made in collboration with my uncle, Assim Addous.
-"""
-
-DIM = (800, 800) # dimensions of the screen must be equal please ;(
-dim = 5 # size of grid
+DIM = (600, 400) # Dimension of the screen.
+spacing = 20 # width of the cell
 
 class Cell:
-    def __init__(self, x, y, wdth):
-        self.x = x
-        self.y = y
-        self.wdth = wdth
+    def __init__(self, col, row, width_):
+        self.col = col
+        self.row = row
+        self.width_ = width_
         self.state = False
             
     def show(self):
@@ -20,17 +15,20 @@ class Cell:
         else:
             stroke(255, 100)
             fill(0)
-        square(self.x, self.y, self.wdth)
+        square(self.col, self.row, self.width_)
 
 class Grid:
-    def __init__(self, dim, wdth):
+    def __init__(self, spacing, width_, height_):
         """
-            `dim` is the number of rows AND columns; they must be equal so creating the 
-             grid would be easier.
-             `wdth` is the total width of the grid. It is usually just the screen's width (or height).
+             `spacing` is the size of the cells.
+             `width_` is the total width of the grid. 
+             `height_` is the total height of the grid.
         """
-        self.dim = dim
-        self.wdth = wdth
+        self.spacing = spacing
+        self.width_ = width_
+        self.height_ = height_
+        self.cols = floor(self.width_ / self.spacing)
+        self.rows = floor(self.height_ / self.spacing)
         self.grid = []
             
     def create(self):
@@ -41,12 +39,11 @@ class Grid:
              [cell4, cell5, cell6], Column 2
              [cell7, cell8, cell9]  Column 3 
             ]    
-        """
-        spacing = floor(self.wdth / self.dim) # width of each cell
-        for col in range(0, self.wdth, spacing):
+        """        
+        for col in range(0, self.width_, self.spacing):
             column = []
-            for row in range(0, self.wdth, spacing):
-                cell = Cell(col, row, spacing)
+            for row in range(0, self.height_, self.spacing):
+                cell = Cell(col, row, self.spacing)
                 column.append(cell)
             self.grid.append(column)
     
@@ -57,45 +54,45 @@ class Grid:
                 
     def erase(self):
          del self.grid[:]
-    
+   
     def get_neighbors(self, column_index, row_index):
         neighbors = [
-                      self.grid[(column_index + 1) % self.dim][row_index], self.grid[(column_index - 1) % self.dim][row_index],
-                      self.grid[column_index][(row_index + 1) % self.dim], self.grid[column_index][(row_index - 1) % self.dim],
-                      self.grid[(column_index + 1) % self.dim][(row_index + 1) % self.dim], self.grid[(column_index + 1) % self.dim][(row_index - 1) % self.dim],
-                      self.grid[(column_index - 1) % self.dim][(row_index + 1) % self.dim], self.grid[(column_index - 1) % self.dim][(row_index - 1) % self.dim],
+                      self.grid[(column_index + 1) % self.cols][row_index], self.grid[(column_index - 1) % self.cols][row_index],
+                      self.grid[column_index][(row_index + 1) % self.rows], self.grid[column_index][(row_index - 1) % self.rows],
+                      self.grid[(column_index + 1) % self.cols][(row_index + 1) % self.rows], self.grid[(column_index + 1) % self.cols][(row_index - 1) % self.rows],
+                      self.grid[(column_index - 1) % self.cols][(row_index + 1) % self.rows], self.grid[(column_index - 1) % self.cols][(row_index - 1) % self.rows],
                     ]
         
         return [cell.state for cell in neighbors]
     
-    # Was used for debugging purposes, no longer needed
-    # def __str__(self):
-    #     return str([[cell.state for cell in column] for column in self.grid])
 
-# Doesn't matter if we used [0] or [1]
-read_grid = Grid(dim, DIM[0]) 
-write_grid = Grid(dim, DIM[0])
+# read_grid = Grid(spacing, 1920, 1080) 
+# write_grid = Grid(spacing, 1920, 1080)
+
+read_grid = Grid(spacing, *DIM) 
+write_grid = Grid(spacing, *DIM)
 read_grid.create()
 
 run = False
 
 def setup():    
     size(*DIM)
+    # fullScreen()
     
 def draw():
-    global read_grid, write_grid, run
-            
-    # Algorithm:
-    #    1) Create grid `read_grid`
-    #    2) Create another grid `write_grid`. Should be blank!
-    #    3) Based on `read_grid`, fill in for `write_grid`
-    #    4) Replace `read_grid` by `write_grid` 
+    global read_grid, write_grid
 
     """
-        If a cell is alive, and has less than 2 living neighbors, then it dies.
-        If a cell is alive, and has 3 or 2 living neighbors, then it survives. 
-        If a cell is alive, and has more than 3 neighbors, then it dies.
-        If a cell is dead, and has 3 neighbors, then it becomes alive.
+        Algorithm:
+            1) Create grid `read_grid`
+            2) Create a another grid `write_grid`. Should be blank!
+            3) Based on `read_grid`, fill in for `write_grid`
+            4) Replace `read_grid` by `write_grid`
+        Rules:     
+            If a cell is alive, and has less than 2 living neighbors, then it dies.
+            If a cell is alive, and has 3 or 2 living neighbors, then it survives. 
+            If a cell is alive, and has more than 3 neighbors, then it dies.
+            If a cell is dead, and has 3 neighbors, then it becomes alive.
     """
 
     if run:
@@ -119,15 +116,17 @@ def draw():
         write_grid.erase()
     else:
         read_grid.show()
+            
+def mouseClicked():
+    global read_grid
+    j, k = (mouseX // spacing, mouseY // spacing)
+    cell = read_grid.grid[j][k]
+    cell.state = not cell.state
     
 def keyPressed():
     global run
     if key == ENTER:
         run = not run
-        
-def mouseClicked():
-    global read_grid
-    spacing = DIM[0] // read_grid.dim
-    k, j = (mouseY // spacing, mouseX // spacing)
-    cell = read_grid.grid[j][k]
-    cell.state = not cell.state
+    # If you want to save the frames    
+    elif key == "s":
+        saveFrame("GOF###.png")
