@@ -1,5 +1,5 @@
-DIM = (600, 400) # Dimension of the screen.
-spacing = 20 # width of the cell
+DIM = (600, 400) # Dimension of the screen. Change as you wish.
+spacing = 20 # Width of the cell. Change as you wish.
 
 class Cell:
     def __init__(self, col, row, width_):
@@ -27,8 +27,8 @@ class Grid:
         self.spacing = spacing
         self.width_ = width_
         self.height_ = height_
-        self.cols = floor(self.width_ / self.spacing)
-        self.rows = floor(self.height_ / self.spacing)
+        self.cols = self.width_ // self.spacing
+        self.rows = self.height_ // self.spacing
         self.grid = []
             
     def create(self):
@@ -75,9 +75,9 @@ read_grid.create()
 
 run = False
 
-def setup():    
-    size(*DIM)
+def setup():
     # fullScreen()
+    size(*DIM)
     
 def draw():
     global read_grid, write_grid
@@ -94,7 +94,6 @@ def draw():
             If a cell is alive, and has more than 3 neighbors, then it dies.
             If a cell is dead, and has 3 neighbors, then it becomes alive.
     """
-
     if run:
         write_grid.create()
         for read_column, write_column in zip(read_grid.grid, write_grid.grid):
