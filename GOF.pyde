@@ -113,7 +113,6 @@ def draw():
         reading_grid.show()
             
 def mouseClicked():
-    global reading_grid
     j, k = (mouseX // cell_width, mouseY // cell_width)
     cell = reading_grid.grid[j][k]
     cell.state = not cell.state
