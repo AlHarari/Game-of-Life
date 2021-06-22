@@ -106,7 +106,6 @@ def draw():
                     write_cell.state = False
                 elif not(read_cell.state) and neighbors_state.count(True) == 3:
                     write_cell.state = True
-        reading_grid.erase()
         reading_grid.grid = [[cell for cell in column] for column in writing_grid.grid]    
         reading_grid.show()
         writing_grid.erase()
