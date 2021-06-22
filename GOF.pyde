@@ -1,5 +1,6 @@
 DIM = (600, 400) # Dimension of the screen.
 cell_width = 20 
+running = False
 
 class Cell:
     def __init__(self, col, row, width_):
@@ -71,8 +72,6 @@ class Grid:
 reading_grid = Grid(cell_width, *DIM) 
 writing_grid = Grid(cell_width, *DIM)
 reading_grid.create()
-
-running = False
 
 def setup():    
     size(*DIM)
