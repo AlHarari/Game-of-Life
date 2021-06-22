@@ -1,5 +1,5 @@
-DIM = (600, 400) # Dimension of the screen. Change as you wish.
-spacing = 20 # Width of the cell. Change as you wish.
+DIM = (600, 400) # Dimension of the screen.
+cell_width = 20 
 
 class Cell:
     def __init__(self, col, row, width_):
@@ -18,19 +18,19 @@ class Cell:
         square(self.col, self.row, self.width_)
 
 class Grid:
-    def __init__(self, spacing, width_, height_):
+    def __init__(self, cell_width, width_, height_):
         """
-             `spacing` is the size of the cells.
+             `cell_width` is the size of the cells.
              `width_` is the total width of the grid. 
              `height_` is the total height of the grid.
         """
-        self.spacing = spacing
+        self.cell_width = cell_width
         self.width_ = width_
         self.height_ = height_
-        self.cols = self.width_ // self.spacing
-        self.rows = self.height_ // self.spacing
+        self.cols = self.width_ // self.cell_width
+        self.rows = self.height_ // self.cell_width
         self.grid = []
-            
+        
     def create(self):
         """
             Here is the structure of the self.grid:
@@ -40,10 +40,10 @@ class Grid:
              [cell7, cell8, cell9]  Column 3 
             ]    
         """        
-        for col in range(0, self.width_, self.spacing):
+        for col in range(0, self.width_, self.cell_width):
             column = []
-            for row in range(0, self.height_, self.spacing):
-                cell = Cell(col, row, self.spacing)
+            for row in range(0, self.height_, self.cell_width):
+                cell = Cell(col, row, self.cell_width)
                 column.append(cell)
             self.grid.append(column)
     
@@ -65,42 +65,40 @@ class Grid:
         
         return [cell.state for cell in neighbors]
     
+# reading_grid = Grid(cell_width, 1920, 1080) 
+# writing_grid = Grid(cell_width, 1920, 1080)
 
-# read_grid = Grid(spacing, 1920, 1080) 
-# write_grid = Grid(spacing, 1920, 1080)
+reading_grid = Grid(cell_width, *DIM) 
+writing_grid = Grid(cell_width, *DIM)
+reading_grid.create()
 
-read_grid = Grid(spacing, *DIM) 
-write_grid = Grid(spacing, *DIM)
-read_grid.create()
+running = False
 
-run = False
-
-def setup():
-    # fullScreen()
+def setup():    
     size(*DIM)
+    # fullScreen()
     
 def draw():
-    global read_grid, write_grid
-
+    global reading_grid, writing_grid
     """
         Algorithm:
-            1) Create grid `read_grid`
-            2) Create a another grid `write_grid`. Should be blank!
-            3) Based on `read_grid`, fill in for `write_grid`
-            4) Replace `read_grid` by `write_grid`
+            1) Create grid `reading_grid`
+            2) Create a another grid `writing_grid`. Should be blank!
+            3) Based on `reading_grid`, fill in for `writing_grid`
+            4) Replace `reading_grid` by `writing_grid`
         Rules:     
             If a cell is alive, and has less than 2 living neighbors, then it dies.
             If a cell is alive, and has 3 or 2 living neighbors, then it survives. 
             If a cell is alive, and has more than 3 neighbors, then it dies.
             If a cell is dead, and has 3 neighbors, then it becomes alive.
     """
-    if run:
-        write_grid.create()
-        for read_column, write_column in zip(read_grid.grid, write_grid.grid):
+    if running:
+        writing_grid.create()
+        for read_column, write_column in zip(reading_grid.grid, writing_grid.grid):
             for read_cell, write_cell in zip(read_column, write_column):
-                column_index = read_grid.grid.index(read_column)
+                column_index = reading_grid.grid.index(read_column)
                 row_index = read_column.index(read_cell)
-                neighbors_state = read_grid.get_neighbors(column_index,row_index)        
+                neighbors_state = reading_grid.get_neighbors(column_index,row_index)        
                 if read_cell.state and (neighbors_state.count(True) == 3 or neighbors_state.count(True) == 2): 
                     write_cell.state = True
                 elif read_cell.state and neighbors_state.count(True) < 2:
@@ -109,23 +107,28 @@ def draw():
                     write_cell.state = False
                 elif not(read_cell.state) and neighbors_state.count(True) == 3:
                     write_cell.state = True
-        read_grid.erase()
-        read_grid.grid = [[cell for cell in column] for column in write_grid.grid]    
-        read_grid.show()
-        write_grid.erase()
+        reading_grid.erase()
+        reading_grid.grid = [[cell for cell in column] for column in writing_grid.grid]    
+        reading_grid.show()
+        writing_grid.erase()
     else:
-        read_grid.show()
+        reading_grid.show()
             
 def mouseClicked():
-    global read_grid
-    j, k = (mouseX // spacing, mouseY // spacing)
-    cell = read_grid.grid[j][k]
+    global reading_grid
+    j, k = (mouseX // cell_width, mouseY // cell_width)
+    cell = reading_grid.grid[j][k]
     cell.state = not cell.state
     
 def keyPressed():
-    global run
+    global running
     if key == ENTER:
-        run = not run
+        running = not running
     # If you want to save the frames    
     elif key == "s":
         saveFrame("GOF###.png")
+    # "Clearing" the grid
+    elif (not running) and key == "c":
+        for column in reading_grid.grid:
+            for cell in column:
+                cell.state = False 
