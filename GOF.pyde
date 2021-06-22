@@ -60,7 +60,7 @@ class Grid:
                       self.grid[(column_index + 1) % self.cols][row_index], self.grid[(column_index - 1) % self.cols][row_index],
                       self.grid[column_index][(row_index + 1) % self.rows], self.grid[column_index][(row_index - 1) % self.rows],
                       self.grid[(column_index + 1) % self.cols][(row_index + 1) % self.rows], self.grid[(column_index + 1) % self.cols][(row_index - 1) % self.rows],
-                      self.grid[(column_index - 1) % self.cols][(row_index + 1) % self.rows], self.grid[(column_index - 1) % self.cols][(row_index - 1) % self.rows],
+                      self.grid[(column_index - 1) % self.cols][(row_index + 1) % self.rows], self.grid[(column_index - 1) % self.cols][(row_index - 1) % self.rows]
                     ]
         
         return [cell.state for cell in neighbors]
