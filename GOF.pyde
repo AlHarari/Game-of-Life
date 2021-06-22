@@ -113,9 +113,10 @@ def draw():
         reading_grid.show()
             
 def mouseClicked():
-    j, k = (mouseX // cell_width, mouseY // cell_width)
-    cell = reading_grid.grid[j][k]
-    cell.state = not cell.state
+    if not running:
+        j, k = (mouseX // cell_width, mouseY // cell_width)
+        cell = reading_grid.grid[j][k]
+        cell.state = not cell.state
     
 def keyPressed():
     global running
